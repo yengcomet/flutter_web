@@ -1,30 +1,29 @@
 import 'dart:async';
-
-import 'package:flutter_web/model/video.dart';
-import 'package:flutter_web/service/api_fetch_video.dart';
+import 'package:flutter_web/model/movie.dart';
+import 'package:flutter_web/service/api_fetch_movie.dart';
 
 class HomeBloc{
-  final FetchVideoApiService _apiService;
-  FetchVideoApiService get apiService => _apiService;
+  final FetchMoviesApiService _apiService;
+  FetchMoviesApiService get apiService => _apiService;
 
-  HomeBloc({FetchVideoApiService apiService}): this._apiService = apiService ?? FetchVideoApiService();
+  HomeBloc({FetchMoviesApiService apiService}): this._apiService = apiService ?? FetchMoviesApiService();
 
-   StreamController _videoStreamController =
-      StreamController<List<Video>>.broadcast();
-  Stream get videoDispley => _videoStreamController.stream.asBroadcastStream();
+   StreamController _moviesStreamController =
+      StreamController<List<Movie>>.broadcast();
+  Stream get moviesDispley => _moviesStreamController.stream.asBroadcastStream();
 
 
-  fetchVideos(){
-    _videoStreamController.sink.add(null);
-    _apiService.getVideos().then((results) {
-      _videoStreamController.add(results);
+  fetchMovies(){
+    _moviesStreamController.sink.add(null);
+    _apiService.getMovies().then((results) {
+      _moviesStreamController.add(results);
     }).catchError((error) {
-      _videoStreamController.addError(error);
+      _moviesStreamController.addError(error);
     });
   }
 
   dispose(){
-    _videoStreamController.close();
+    _moviesStreamController.close();
   }
 
 }

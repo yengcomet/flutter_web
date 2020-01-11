@@ -1,0 +1,1 @@
+{"isEntrypoint":true,"deps":["json_annotation|lib/json_annotation.dart"],"parts":["flutter_web|lib/model/branch.g.dart"],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

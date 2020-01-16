@@ -1,1 +1,0 @@
-{"isEntrypoint":true,"deps":["json_annotation|lib/json_annotation.dart"],"parts":["flutter_web|lib/model/movie.g.dart"],"conditionalDeps":[],"sdkDeps":[],"hasMain":false}

@@ -1,27 +1,54 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_web/ui/widget/ui_constractor.dart';
+import 'package:flutter_web/ui/ui_constractor.dart';
+import 'api.dart';
+import 'class.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
-  _HomePageState createState() => _HomePageState();
+  createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  
+class _HomePageState extends State {
+  var users = new List<Movie>();
+
+  _getUsers() {
+    API.getUsers().then((response) {
+      setState(() {
+        Iterable list = json.decode(response.body);
+        users = list.map((model) => Movie.fromJson(model)).toList();
+      });
+    });
+  }
+
+  initState() {
+    super.initState();
+    _getUsers();
+  }
+
+  dispose() {
+    super.dispose();
+  }
+
   @override
-  Widget build(BuildContext context) {
+  build(context) {
     return Scaffold(
-      backgroundColor: backgroudCorlor,
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: Text('Flutter Web'),
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: EdgeInsets.only(top: 80),
-        
-      ),
-    );
+        appBar: AppBar(
+          title: Text("Flutter web"),
+          centerTitle: true,
+          backgroundColor: appBarColor,
+        ),
+        body: Container(
+          padding: EdgeInsets.all(20),
+          child: GridView.builder(
+            gridDelegate:
+                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+            primary: false,
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              return Card(child: ListTile(title: Text(users[index].name)));
+            },
+          ),
+        ));
   }
 }

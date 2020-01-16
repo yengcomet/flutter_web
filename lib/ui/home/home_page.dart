@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/bloc/home_bloc.dart';
-import 'package:flutter_web/model/movie.dart';
+import 'package:flutter_web/model/branch.dart';
+import 'package:flutter_web/model/video.dart';
 import 'package:flutter_web/ui/widget/movies_widget.dart';
 import 'package:flutter_web/ui/widget/ui_constractor.dart';
 
 class HomePage extends StatefulWidget {
+  final Branch video;
+  HomePage({this.video});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -12,15 +15,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   HomeBloc homeBloc = HomeBloc();
 
+   Branch movieShow = Branch();
+
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
   Future<Null> refreshList() async {
+    // homeBloc.fetchMovies();
     homeBloc.fetchMovies();
     return null;
   }
-
-  
 
   Widget _moviesGridViewBuild() {
     return StreamBuilder(
@@ -34,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }
-        List<Movie> moviesList = snapshot.data ?? [];
+        List<Branch> moviesList = snapshot.data ?? [];
 
         // if (moviesList.length == 0) {
         //   return MoviesWidget(
@@ -48,8 +52,8 @@ class _HomePageState extends State<HomePage> {
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemCount: moviesList.length,
           itemBuilder: (context, index) {
-            Movie movieShow = moviesList[index];
-            List<String> images = movieShow.poster ?? [];
+            Branch movieShow = moviesList[index];
+            List<String> images = movieShow.cover ?? [];
             String imageURL;
             if (images.length > 0) {
               imageURL = images.first;
@@ -58,9 +62,9 @@ class _HomePageState extends State<HomePage> {
               onTap: () {},
               child: MoviesWidget(
                 imagePath: imageURL,
-                textTitle: movieShow.title,
-                textTitleLaos: movieShow.titleLao,
-                date: movieShow.releasedDate,
+                textTitle: movieShow.name,
+                textTitleLaos: movieShow.nameLao,
+                date: movieShow.detail,
               ),
             );
           },
@@ -92,7 +96,8 @@ class _HomePageState extends State<HomePage> {
           onRefresh: () async {
             await refreshList();
           },
-          child: _moviesGridViewBuild(),
+          // child: _moviesGridViewBuild(),
+          child: Text(movieShow.name),
         ),
       ),
     );

@@ -10,20 +10,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State {
-  var users = new List<Movie>();
+  var movies = new List<Showing>();
 
-  _getUsers() {
-    API.getUsers().then((response) {
+  _getMovies() {
+    API.getMovies().then((response) {
       setState(() {
-        List list = json.decode(response.body);
-        users = list.map((model) => Movie.fromJson(model)).toList();
+        Iterable list = json.decode(response.body);
+        movies = list.map((model) => Showing.fromJson(model)).toList();
       });
     });
   }
 
   initState() {
     super.initState();
-    _getUsers();
+    _getMovies();
   }
 
   dispose() {
@@ -44,9 +44,9 @@ class _HomePageState extends State {
             gridDelegate:
                 new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
             primary: false,
-            itemCount: users.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
-              return Card(child: ListTile(title: Text(users[index].name)));
+              return Card(child: ListTile(title: Text(movies[index].title)));
             },
           ),
         ));

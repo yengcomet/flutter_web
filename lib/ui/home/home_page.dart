@@ -15,7 +15,7 @@ class _HomePageState extends State {
   _getUsers() {
     API.getUsers().then((response) {
       setState(() {
-        Iterable list = json.decode(response.body);
+        List list = json.decode(response.body);
         users = list.map((model) => Movie.fromJson(model)).toList();
       });
     });

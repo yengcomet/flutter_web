@@ -1,54 +1,93 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/ui/ui_constractor.dart';
-import 'api.dart';
-import 'class.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
-  createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State {
-  var movies = new List<Showing>();
-
-  _getMovies() {
-    API.getMovies().then((response) {
-      setState(() {
-        Iterable list = json.decode(response.body);
-        movies = list.map((model) => Showing.fromJson(model)).toList();
-      });
-    });
-  }
-
-  initState() {
-    super.initState();
-    _getMovies();
-  }
-
-  dispose() {
-    super.dispose();
+class _HomePageState extends State<HomePage> {
+  Future<Map> getMovies() async {
+    String baseUrl = "http://app.cityplexlaos.com/api/v2/main";
+    http.Response response = await http.get(baseUrl);
+    return json.decode(response.body);
   }
 
   @override
-  build(context) {
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Flutter web"),
-          centerTitle: true,
-          backgroundColor: appBarColor,
-        ),
-        body: Container(
-          padding: EdgeInsets.all(20),
-          child: GridView.builder(
-            gridDelegate:
-                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-            primary: false,
-            itemCount: movies.length,
-            itemBuilder: (context, index) {
-              return Card(child: ListTile(title: Text(movies[index].title)));
-            },
-          ),
-        ));
+      appBar: AppBar(
+        title: Text("Flutter Web"),
+        centerTitle: true,
+        backgroundColor: appBarColor,
+      ),
+      body: FutureBuilder(
+        future: getMovies(),
+        builder: (context, snapshot) {
+          Map data = snapshot.data;
+          if (snapshot.hasError) {
+            print("Your Erro ${snapshot.error}");
+            return Text(
+              "Failed to get respone from the server",
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 22.0,
+              ),
+            );
+          } else if (snapshot.hasData) {
+            return Center(
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index2) {
+                      Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              child: InkWell(
+                                onTap: () {},
+                                child: Image.network(
+                                    '${data['coming'][index]['movies'][index2]['poster']}'),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Text(
+                            //   '${data['showing'][index]['title']}',
+                            //   style: TextStyle(
+                            //       fontSize: 26, fontWeight: FontWeight.bold),
+                            // ),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                            // Text(
+                            //   '${data['coming'][index]['section_lo']}',
+                            //   style: TextStyle(
+                            //       fontSize: 20, fontWeight: FontWeight.bold),
+                            // ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            );
+          } else if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: appBarColor,
+              ),
+            );
+          }
+        },
+      ),
+    );
   }
 }

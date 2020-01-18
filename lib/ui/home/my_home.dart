@@ -37,17 +37,19 @@ class _MYHomePageState extends State<MYHomePage> {
               ),
             );
           } else if (snapshot.hasData) {
-            return Center(
-              child: GridView.builder(
+            return GridView.builder(
                 gridDelegate:
-                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return Container(
                     padding: EdgeInsets.all(10.0),
+                    height: 800,
+                    width: 400,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Container(
+                        Expanded(
                           child: InkWell(
                             onTap: () {},
                             child: Image.network(
@@ -55,19 +57,18 @@ class _MYHomePageState extends State<MYHomePage> {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
-                        Text('${data['showing'][index]['title']}',style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),),
+                        Text('${data['showing'][index]['title']}',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                         SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
-                        Text('${data['coming'][index]['section_lo']}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        Text('${data['coming'][index]['section_lo']}',style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
                       ],
                     ),
                   );
                 },
-              ),
-            );
+              );
           } else if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(

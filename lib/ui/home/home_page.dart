@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (snapshot.hasData) {
             return Center(
-              child: ListView.builder(
+              child: GridView.builder(
+                gridDelegate:
+                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return ListView.builder(

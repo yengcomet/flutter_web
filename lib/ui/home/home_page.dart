@@ -1,7 +1,8 @@
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_web/ui/home/api.dart';
+import 'package:flutter_web/ui/home/detail_page.dart';
 import 'package:flutter_web/ui/ui_constractor.dart';
-import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,10 +10,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<Map> getMovies() async {
-    String baseUrl = "http://app.cityplexlaos.com/api/v2/main";
-    http.Response response = await http.get(baseUrl);
-    return json.decode(response.body);
+  // Future<Map> getMovies() async {
+  //   String baseUrl = "http://app.cityplexlaos.com/api/v2/main";
+  //   http.Response response = await http.get(baseUrl);
+  //   return json.decode(response.body);
+  // }
+
+  MovieAPI api = MovieAPI();
+
+  @override
+  void initState() {
+    super.initState();
+    api.getMovies();
   }
 
   @override
@@ -23,72 +32,64 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: appBarColor,
       ),
-      body: FutureBuilder(
-        future: getMovies(),
-        builder: (context, snapshot) {
-          Map data = snapshot.data;
-          if (snapshot.hasError) {
-            print("Your Erro ${snapshot.error}");
-            return Text(
-              "Failed to get respone from the server",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 22.0,
-              ),
-            );
-          } else if (snapshot.hasData) {
-            return Center(
-              child: GridView.builder(
-                gridDelegate:
-                new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index2) {
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              child: InkWell(
-                                onTap: () {},
-                                child: Image.network(
-                                    '${data['coming'][index]['movies'][index2]['poster']}'),
-                              ),
+      body: Container(
+        padding: EdgeInsets.only(top: 10, left: 5,right: 5, bottom: 20),
+        child: FutureBuilder(
+          future: api.getMovies(),
+          builder: (context, snapshot) {
+            Map data = snapshot.data;
+            if (snapshot.hasError) {
+              print("Your Erro ${snapshot.error}");
+              return Text(
+                "Failed to get respone from the server",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 22.0,
+                ),
+              );
+            } else if (snapshot.hasData) {
+              return GridView.builder(
+                  gridDelegate:
+                  new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.all(6.0),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: appBarColor),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailsPage()));
+                              },
+                              child: Image.network(
+                                  '${data['showing'][index]['poster']}'),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            // Text(
-                            //   '${data['showing'][index]['title']}',
-                            //   style: TextStyle(
-                            //       fontSize: 26, fontWeight: FontWeight.bold),
-                            // ),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
-                            // Text(
-                            //   '${data['coming'][index]['section_lo']}',
-                            //   style: TextStyle(
-                            //       fontSize: 20, fontWeight: FontWeight.bold),
-                            // ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            );
-          } else if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: appBarColor,
-              ),
-            );
-          }
-        },
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text('${data['showing'][index]['title']}',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text('${data['coming'][index]['section_lo']}',style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                        ],
+                      ),
+                    );
+                  },
+                );
+            } else if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: appBarColor,
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

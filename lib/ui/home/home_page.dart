@@ -10,11 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Future<Map> getMovies() async {
-  //   String baseUrl = "http://app.cityplexlaos.com/api/v2/main";
-  //   http.Response response = await http.get(baseUrl);
-  //   return json.decode(response.body);
-  // }
 
   MovieAPI api = MovieAPI();
 
@@ -64,8 +59,8 @@ class _HomePageState extends State<HomePage> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailsPage()));
                               },
-                              child: Image.network(
-                                  '${data['showing'][index]['poster']}'),
+                              // child: Image.network(
+                              //     '${data['showing'][index]['poster']}'),
                             ),
                           ),
                           SizedBox(

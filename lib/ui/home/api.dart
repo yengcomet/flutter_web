@@ -3,13 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const baseUrl = "https://jsonplaceholder.typicode.com";
-
-// const baseUrl = "http://app.cityplexlaos.com/api/v2";
+const baseUrl = "http://app.cityplexlaos.com/api/v2";
 class MovieAPI {
   Future<Map> getMovies() async {
-    // var url = baseUrl + "/main";
-    var url = baseUrl + "/users";
+    var url = baseUrl + "/main";
     http.Response response = await http.get(url);
     return json.decode(response.body);
   }

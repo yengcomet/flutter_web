@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web/ui/home/api.dart';
-import 'package:flutter_web/ui/home/detail_page.dart';
-import 'package:flutter_web/ui/ui_constractor.dart';
+import 'package:flutter_web/service/api.dart';
+import 'package:flutter_web/ui/detail/detail_page.dart';
+import 'package:flutter_web/ui/ui_contractor.dart';
+import 'package:flutter_web/widget/error_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -34,18 +35,12 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             Map data = snapshot.data;
             if (snapshot.hasError) {
-              print("Your Erro ${snapshot.error}");
-              return Text(
-                "Failed to get respone from the server",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 22.0,
-                ),
-              );
+              print("Your Error ${snapshot.error}");
+              return ErrorWidgetPage();
             } else if (snapshot.hasData) {
               return GridView.builder(
                   gridDelegate:
-                  new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     return Container(
@@ -59,8 +54,8 @@ class _HomePageState extends State<HomePage> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailsPage()));
                               },
-                              // child: Image.network(
-                              //     '${data['showing'][index]['poster']}'),
+                              child: Image.network(
+                                  '${data['showing'][index]['poster']}'),
                             ),
                           ),
                           SizedBox(
@@ -76,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 );
-            } else if (!snapshot.hasData) {
+            } else {
               return Center(
                 child: CircularProgressIndicator(
                   backgroundColor: appBarColor,

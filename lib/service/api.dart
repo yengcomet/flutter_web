@@ -7,7 +7,8 @@ const baseUrl = "http://app.cityplexlaos.com/api/v2";
 class MovieAPI {
   Future<Map> getMovies() async {
     var url = baseUrl + "/main";
-    http.Response response = await http.get(url);
+    Map<String, String> headers = {'Content-type':"application/json, charset=utf-8"};
+    http.Response response = await http.get(url, headers: headers);
     return json.decode(response.body);
   }
 

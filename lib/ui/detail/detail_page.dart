@@ -1,7 +1,6 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_web/ui/ui_constractor.dart';
+import 'package:flutter_web/ui/ui_contractor.dart';
 import 'package:video_player/video_player.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -16,19 +15,19 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   void initState() {
+    super.initState();
     _controller = VideoPlayerController.network(
       'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
     );
     _initializeVideoPlayerFuture = _controller.initialize();
 
     _controller.setLooping(true);
-    super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   @override
@@ -56,7 +55,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         width: 200,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: appBarColor),
+                            color: Colors.white),
                       ),
                       SizedBox(
                         width: 100,

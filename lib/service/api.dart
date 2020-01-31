@@ -14,7 +14,8 @@ class MovieAPI {
 
    Future<Map> getMovieDetails(int movieID, int branchID) async{
     var url = baseUrl + "/movies/" + movieID.toString() + "/branch/" + branchID.toString();
-    http.Response response = await http.get(url);
+    Map<String, String> headers = {'Content-type':"application/json, charset=utf-8"};
+    http.Response response = await http.get(url, headers: headers);
     return json.decode(response.body);
   }
 }

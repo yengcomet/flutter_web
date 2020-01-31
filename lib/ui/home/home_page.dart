@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_web/service/api.dart';
 import 'package:flutter_web/ui/detail/detail_page.dart';
@@ -11,7 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   MovieAPI api = MovieAPI();
 
   @override
@@ -29,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: appBarColor,
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 10, left: 5,right: 5, bottom: 20),
+        padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 20),
         child: FutureBuilder(
           future: api.getMovies(),
           builder: (context, snapshot) {
@@ -38,39 +36,63 @@ class _HomePageState extends State<HomePage> {
               print("Your Error ${snapshot.error}");
               return ErrorWidgetPage();
             } else if (snapshot.hasData) {
-              return GridView.builder(
-                  gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              return Center(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
+                    String imagePath = data['showing'][index]['poster'];
+                    String title = data['showing'][index]['title'];
+                    String sections = data['coming'][index]['section_lo'];
                     return Container(
                       margin: EdgeInsets.all(6.0),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: appBarColor),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: appBarColor),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailsPage()));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailsPage(
+                                      imagePath: imagePath,
+                                      title: title,
+                                      description: sections,
+                                    ),
+                                  ),
+                                );
                               },
                               child: Image.network(
-                                  '${data['showing'][index]['poster']}'),
+                                  '$imagePath'),
                             ),
                           ),
                           SizedBox(
                             height: 5,
                           ),
-                          Text('${data['showing'][index]['title']}',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                          Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                           SizedBox(
                             height: 5,
                           ),
-                          Text('${data['coming'][index]['section_lo']}',style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+                          Text(
+                            sections,
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     );
                   },
-                );
+                ),
+              );
             } else {
               return Center(
                 child: CircularProgressIndicator(

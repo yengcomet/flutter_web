@@ -4,7 +4,10 @@ import 'package:flutter_web/ui/ui_contractor.dart';
 import 'package:video_player/video_player.dart';
 
 class DetailsPage extends StatefulWidget {
-  DetailsPage({Key key}) : super(key: key);
+  final String title;
+  final String description;
+  final String imagePath;
+  DetailsPage({this.description, this.title, this.imagePath});
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
@@ -56,6 +59,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.white),
+                            // child: widget.imagePath,
                       ),
                       SizedBox(
                         width: 100,
@@ -64,17 +68,17 @@ class _DetailsPageState extends State<DetailsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Title",
+                            widget.title,
                             style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           Text(
-                            "Details",
+                            widget.description,
                             style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
